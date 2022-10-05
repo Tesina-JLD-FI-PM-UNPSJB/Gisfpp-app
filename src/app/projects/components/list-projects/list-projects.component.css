@@ -1,0 +1,15 @@
+.label-detail {
+  font-weight: bold;
+  color: #004B6B;
+  margin-right: 10px;
+}
+
+.col-detail {
+  font-weight: bold;
+  font-size: 0.8em;
+  text-decoration: underline;
+}
+
+.cell-detail {
+  font-size: 0.8em;
+}

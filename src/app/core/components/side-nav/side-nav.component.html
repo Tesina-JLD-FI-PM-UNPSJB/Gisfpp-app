@@ -1,0 +1,29 @@
+<clr-vertical-nav [clrVerticalNavCollapsible]="true" class="nav-trigger--bottom sideNav">
+  <clr-vertical-nav-group routerLinkActive="active">
+    <clr-icon clrVerticalNavIcon shape="organization"></clr-icon>
+    Gestión de Projectos
+    <clr-vertical-nav-group-children>
+      <a clrVerticalNavLink routerLink="/gisfpp/projects/list" routerLinkActive="active">
+      Projectos
+      </a>
+    </clr-vertical-nav-group-children>
+  </clr-vertical-nav-group>
+  <clr-vertical-nav-group>
+    <clr-icon clrVerticalNavIcon shape="tasks"></clr-icon>
+    Gestión de Procesos
+    <clr-vertical-nav-group-children>
+      <a clrVerticalNavLink routerLink="/pepe" routerLinkActive="active">
+      Procesos
+    </a>
+  </clr-vertical-nav-group-children>
+  </clr-vertical-nav-group>
+  <clr-vertical-nav-group>
+    <clr-icon clrVerticalNavIcon shape="users"></clr-icon>
+    Gestión de Usuarios
+    <clr-vertical-nav-group-children>
+      <a clrVerticalNavLink routerLink="#" routerLinkActive="active">
+      Usuarios
+    </a>
+  </clr-vertical-nav-group-children>
+  </clr-vertical-nav-group>
+</clr-vertical-nav>

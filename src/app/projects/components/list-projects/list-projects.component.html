@@ -1,0 +1,66 @@
+<div class="card">
+  <div class="card-header">Proyectos</div>
+  <div class="card-block">
+    <div class="card-text">
+      <clr-datagrid>
+        <clr-dg-placeholder> No se encontro ning&uacute;n proyecto </clr-dg-placeholder>
+        <!-- Encabezados de columnas -->
+        <clr-dg-column>Id</clr-dg-column>
+        <clr-dg-column>Código</clr-dg-column>
+        <clr-dg-column>Nro. Resolución</clr-dg-column>
+        <clr-dg-column>Título</clr-dg-column>
+        <clr-dg-column>Inicio</clr-dg-column>
+        <clr-dg-column>Fin</clr-dg-column>
+        <clr-dg-column> Estado </clr-dg-column>
+
+        <!-- Filas -->
+        <clr-dg-row *clrDgItems="let project of projects" [clrDgItem]="project" >
+          <clr-dg-action-overflow>
+            <button class="action-item" (click)="onEdit(project)">Editar</button>
+            <button class="action-item" (click)="onDelete(project)">Eliminar</button>
+          </clr-dg-action-overflow>
+          <clr-dg-cell>{{project.id}}</clr-dg-cell>
+          <clr-dg-cell>{{project.code}}</clr-dg-cell>
+          <clr-dg-cell>{{project.resolutionNumber}}</clr-dg-cell>
+          <clr-dg-cell>{{project.title}}</clr-dg-cell>
+          <clr-dg-cell>{{project.start | date: 'dd/MM/yyyy' }}</clr-dg-cell>
+          <clr-dg-cell>{{project.end | date: 'dd/MM/yyyy' }}</clr-dg-cell>
+          <clr-dg-cell>{{project.getTitleState() }}</clr-dg-cell>
+        </clr-dg-row>
+
+        <clr-dg-detail *clrIfDetail="let detail">
+          <clr-dg-detail-header>{{detail.title}}</clr-dg-detail-header>
+          <clr-dg-detail-body>
+            <div class="clr-row">
+              <span class="label-detail">Tipo:</span>
+              <span>{{detail.getTitleType() }}</span>
+              <hr>
+            </div>
+            <div class="clr-row">
+              <span class="label-detail">Descripci&oacute;n:</span>
+              <span>{{detail.description}}</span>
+            </div>
+            <div class="clr-row">
+              <span class="label-detail">Detalle:</span>
+              <span>{{detail.detail}}</span>
+            </div>
+          </clr-dg-detail-body>
+        </clr-dg-detail>
+      </clr-datagrid>
+    </div>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-sm btn-link" (click)="null">Nuevo Proyecto</button>
+  </div>
+</div>
+<clr-modal [(clrModalOpen)]="openModalDelete">
+  <h3 class="modal-title">Eliminando Proyecto</h3>
+  <div class="modal-body">
+    <p>¿ Desea realmente eliminar el proyecto <strong>{{ selectedProject?.title }}</strong> ?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline" (click)="openModalDelete = false">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="deleteProject()">Ok</button>
+  </div>
+</clr-modal>
+
