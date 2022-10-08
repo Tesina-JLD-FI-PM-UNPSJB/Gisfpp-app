@@ -7,13 +7,16 @@ import { ClarityModule } from '@clr/angular';
 import { ListProjectsComponent } from './components/list-projects/list-projects.component';
 import { ProjectsPanelComponent } from './components/projects-panel/projects-panel.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormProjectComponent } from './components/form-project/form-project.component';
+import { NewProjectComponent } from './components/new-project/new-project.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ProjectsPanelComponent,
     children: [
-      { path: 'list', component: ListProjectsComponent}
+      { path: 'list', component: ListProjectsComponent},
+      { path: 'new', component: NewProjectComponent }
     ]
   }
 ]
@@ -22,6 +25,8 @@ const routes: Routes = [
   declarations: [
     ListProjectsComponent,
     ProjectsPanelComponent,
+    FormProjectComponent,
+    NewProjectComponent,
   ],
   imports: [
     CommonModule,

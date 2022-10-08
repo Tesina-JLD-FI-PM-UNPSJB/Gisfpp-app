@@ -13,8 +13,6 @@ export class ProjectService {
     this.initFakeDB();
    }
 
-
-
   private initFakeDB() {
     let project1 = new Project();
     project1.id = 105;
@@ -43,6 +41,15 @@ export class ProjectService {
     project2.detail = 'Este es el detalle del proyecto dos';
 
     this.projects.push(project2);
+  }
+
+  public saveNewProject(project: Project): Observable<Project> {
+    const id = Math.round(Math.random() * 100);
+    project.id = id;
+
+    this.projects.push(project);
+
+    return of(project);
   }
 
   public getAllProjects(): Observable<Project[]> {

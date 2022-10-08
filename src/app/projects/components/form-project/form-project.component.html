@@ -1,0 +1,75 @@
+<div class="card">
+  <div class="card-header">
+    {{ titleForm }}
+  </div>
+  <div class="card-block">
+    <clr-alert [clrAlertType]="'danger'" *ngIf="thisForm.errors?.['startGreaterThanEnd']
+          && (thisForm.touched || thisForm.dirty)">
+      <clr-alert-item>
+        <span class="alert-text">
+          {{ thisForm.errors?.['msgDatesComparator'] }}
+        </span>
+      </clr-alert-item>
+    </clr-alert>
+    <form clrForm clrLayout="horizontal" [formGroup]="thisForm">
+      <clr-input-container>
+        <label>Id.</label>
+        <input clrInput type="text" formControlName="id"/>
+      </clr-input-container>
+      <clr-input-container>
+        <label>C&oacute;digo</label>
+        <input clrInput type="text" formControlName="code" />
+      </clr-input-container>
+      <clr-input-container>
+        <label>Nro. Resoluci&oacute;n</label>
+        <input clrInput type="text" formControlName="resolutionNumber"/>
+      </clr-input-container>
+      <clr-input-container>
+        <label>T&iacute;tulo</label>
+        <input clrInput type="text" formControlName="title"/>
+        <clr-control-error> {{ getMsgTitleInvalid() }} </clr-control-error>
+      </clr-input-container>
+      <clr-input-container>
+        <label>Descripci&oacute;n</label>
+        <input clrInput type="text" formControlName="description"/>
+      </clr-input-container>
+      <clr-select-container>
+        <label>Tipo</label>
+        <select clrSelect formControlName="type">
+          <option value="0">Interno</option>
+          <option value="1">Empresa</option>
+          <option value="2">Investigaci&oacute;n</option>
+          <option value="3">Extensi&oacute;n</option>
+        </select>
+      </clr-select-container>
+      <clr-select-container>
+        <label>Estado</label>
+        <select clrSelect formControlName="state">
+          <option value="0">Generado</option>
+          <option value="1">Activo</option>
+          <option value="2">Suspendido</option>
+          <option value="3">Cancelado</option>
+        </select>
+      </clr-select-container>
+      <clr-date-container>
+        <label>Inicio</label>
+        <input type="date" formControlName="start" [(clrDate)]="startDate"/>
+        <clr-control-error> {{ getMsgDateStartInvalid() }} </clr-control-error>
+      </clr-date-container>
+      <clr-date-container>
+        <label>Fin</label>
+        <input type="date" formControlName="end" [(clrDate)]="endDate"/>
+        <clr-control-error> {{ getMsgDateEndInvalid() }} </clr-control-error>
+      </clr-date-container>
+      <clr-textarea-container>
+        <label>Detalle</label>
+        <textarea clrTextarea formControlName="detail"></textarea>
+      </clr-textarea-container>
+    </form>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-sm btn btn-success-outline"
+      (click)="dispatchOnConfirm()" [disabled]="isBtnConfirmDisabled()">Confirmar</button>
+    <button class="btn btn-sm btn-outline" (click)="dispatchOnCancel()" >Cancelar</button>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Project, StateProject, TypeProject } from '../../model/Project.model';
 import { ProjectService } from '../../services/project.service';
 
@@ -16,7 +17,7 @@ throw new Error('Method not implemented.');
   openModalDelete: boolean = false;
   selectedProject?: Project;
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private projectService: ProjectService, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchProjects();
@@ -34,6 +35,10 @@ throw new Error('Method not implemented.');
   onDelete(project: Project): void {
     this.selectedProject = project;
     this.openModalDelete = true;
-   }
+  }
+
+  onCreateNewProject(): void {
+    this.router.navigate(['/gisfpp/projects/new']);
+  }
 
 }
