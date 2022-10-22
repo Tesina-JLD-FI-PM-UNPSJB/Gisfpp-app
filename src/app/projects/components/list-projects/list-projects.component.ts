@@ -9,9 +9,6 @@ import { ProjectService } from '../../services/project.service';
   styleUrls: ['./list-projects.component.css']
 })
 export class ListProjectsComponent implements OnInit {
-deleteProject() {
-throw new Error('Method not implemented.');
-}
 
   projects: Project[] = [];
   openModalDelete: boolean = false;
@@ -25,9 +22,13 @@ throw new Error('Method not implemented.');
 
   fetchProjects() {
     this.projectService.getAllProjects()
-      .subscribe( data => {
-          this.projects = data;
-      });
+    .subscribe( data => {
+      this.projects = data;
+    });
+  }
+
+  deleteProject() {
+    throw new Error('Method not implemented.');
   }
 
   onEdit(project: Project): void { }

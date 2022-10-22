@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  uriProjects: 'http://localhost:41150/gisfpp/Projects'
 };

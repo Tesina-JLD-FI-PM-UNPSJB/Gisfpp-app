@@ -1,58 +1,60 @@
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Project, StateProject, TypeProject } from '../model/Project.model';
+import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { Project, ProjectDTO } from '../model/Project.model';
+
+import { environment } from '../../../environments/environment';
+import { NotificationsService } from 'src/app/core/services/notifications.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProjectService {
-
   private projects: Project[] = [];
 
-  constructor() {
-    this.initFakeDB();
-   }
+  constructor(
+    private restClient: HttpClient,
+    private notificationService: NotificationsService
+  ) {}
 
-  private initFakeDB() {
-    let project1 = new Project();
-    project1.id = 105;
-    project1.code = 'COD00025';
-    project1.resolutionNumber = 'TMP00004';
-    project1.title = 'Proyecto de ejemplo 1';
-    project1.type = TypeProject.ENTERPRISE;
-    project1.state = StateProject.ACTIVE;
-    project1.start = new Date(2022, 3, 15);
-    project1.end = new Date(2023, 3, 14);
-    project1.description = 'Esta es la descripción del proyecto uno';
-    project1.detail = 'Este es el detalle del proyecto uno';
+  private handleError = (error: HttpErrorResponse) => {
+    if (error.status === 0) {
+      // A client-side or network error occurred.
+      this.notificationService.pushError(error.message);
+    } else {
+      // The backend returned an unsuccessful response code.
+      const message = `${error.status} - ${error.error.detail}`;
+      this.notificationService.pushError(message);
+    }
 
-    this.projects.push(project1);
-
-    let project2 = new Project();
-    project2.id = 106;
-    project2.code = 'COD00032';
-    project2.resolutionNumber = 'TMP000024';
-    project2.title = 'Proyecto de ejemplo 2';
-    project2.type = TypeProject.EXTENSION;
-    project2.state = StateProject.GENERATED;
-    project2.start = new Date(2022, 3, 15);
-    project2.end = new Date(2023, 3, 14);
-    project2.description = 'Esta es la descripción del proyecto dos';
-    project2.detail = 'Este es el detalle del proyecto dos';
-
-    this.projects.push(project2);
-  }
+    return throwError(
+      () => new Error('Something bad happened; please try again later.')
+    );
+  };
 
   public saveNewProject(project: Project): Observable<Project> {
-    const id = Math.round(Math.random() * 100);
-    project.id = id;
-
-    this.projects.push(project);
-
-    return of(project);
+    return this.restClient
+      .post<ProjectDTO>(environment.uriProjects, project.getData())
+      .pipe(
+        map((data) => {
+          let result = new Project();
+          result.setData(data);
+          return result;
+        }),
+        catchError(this.handleError)
+      );
   }
 
   public getAllProjects(): Observable<Project[]> {
-    return of(this.projects);
+    return this.restClient.get<ProjectDTO[]>(environment.uriProjects).pipe(
+      map((resp) =>
+        resp.map((item) => {
+          let result = new Project();
+          result.setData(item);
+          return result;
+        })
+      ),
+      catchError(this.handleError)
+    );
   }
 }
