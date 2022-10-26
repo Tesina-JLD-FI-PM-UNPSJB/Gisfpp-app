@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { Project, StateProject, TypeProject } from '../../model/Project.model';
 import { ProjectService } from '../../services/project.service';
 
@@ -8,22 +9,33 @@ import { ProjectService } from '../../services/project.service';
   templateUrl: './list-projects.component.html',
   styleUrls: ['./list-projects.component.css']
 })
-export class ListProjectsComponent implements OnInit {
+export class ListProjectsComponent implements OnInit, OnDestroy {
 
   projects: Project[] = [];
   openModalDelete: boolean = false;
   selectedProject?: Project;
+  readonly sizePage = 10;
+  totalProjects = 0;
+  private loadedPages = 0;
+  private onDestroy$: Subject<void> = new Subject<void>();
 
   constructor(private projectService: ProjectService, private router: Router) { }
 
   ngOnInit(): void {
-    this.fetchProjects();
+    this.fetchProjects(1);
   }
 
-  fetchProjects() {
-    this.projectService.getAllProjects()
-    .subscribe( data => {
-      this.projects = data;
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
+  }
+
+  fetchProjects(numberPage: number): void {
+    this.projectService.getPageProjects(numberPage, this.sizePage)
+    .pipe(takeUntil(this.onDestroy$))
+    .subscribe( page => {
+      this.projects = page.result || [];
+      this.totalProjects = page.totalElements || 0;
     });
   }
 
@@ -40,6 +52,12 @@ export class ListProjectsComponent implements OnInit {
 
   onCreateNewProject(): void {
     this.router.navigate(['/gisfpp/projects/new']);
+  }
+
+  onChangedPage(nroPage: number): void {
+    if (nroPage > this.loadedPages) {
+      this.fetchProjects(nroPage);
+    }
   }
 
 }

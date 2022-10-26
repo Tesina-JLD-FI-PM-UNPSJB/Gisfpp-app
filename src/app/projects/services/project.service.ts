@@ -1,16 +1,16 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { Project, ProjectDTO } from '../model/Project.model';
 
 import { environment } from '../../../environments/environment';
 import { NotificationsService } from 'src/app/core/services/notifications.service';
+import { PageResponse } from 'src/app/core/models/PageResponse.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectService {
-  private projects: Project[] = [];
 
   constructor(
     private restClient: HttpClient,
@@ -37,24 +37,42 @@ export class ProjectService {
       .post<ProjectDTO>(environment.uriProjects, project.getData())
       .pipe(
         map((data) => {
-          let result = new Project();
-          result.setData(data);
-          return result;
+          return this.mappingProject(data);
         }),
         catchError(this.handleError)
       );
   }
 
-  public getAllProjects(): Observable<Project[]> {
-    return this.restClient.get<ProjectDTO[]>(environment.uriProjects).pipe(
-      map((resp) =>
-        resp.map((item) => {
-          let result = new Project();
-          result.setData(item);
-          return result;
-        })
-      ),
+  public getPageProjects(numberPage: number = 1, sizePage: number = 10): Observable<PageResponse<Project>> {
+    const params = new HttpParams()
+                    .set('numberPage', numberPage)
+                    .set('sizePage', sizePage);
+    return this.restClient.get<PageResponse<ProjectDTO>>(environment.uriProjects, {params}).pipe(
+      map((resp) => this.processPage(resp)),
       catchError(this.handleError)
     );
+  }
+
+  private processPage(page: PageResponse<ProjectDTO>): PageResponse<Project> {
+    let result: PageResponse<Project> = {};
+    result.hasMoreElements = page.hasMoreElements;
+    result.numberPage = page.numberPage;
+    result.sizePage = page.sizePage;
+    result.totalElements = page.totalElements;
+    result.result = this.processResultPage(page.result || []);
+
+    return result;
+  }
+
+  private processResultPage(items: ProjectDTO[]): Project[] | undefined {
+    return items.map( proj => {
+      return this.mappingProject(proj);
+    });
+  }
+
+  private mappingProject(proj: ProjectDTO) {
+    const result = new Project();
+    result.setData(proj);
+    return result;
   }
 }

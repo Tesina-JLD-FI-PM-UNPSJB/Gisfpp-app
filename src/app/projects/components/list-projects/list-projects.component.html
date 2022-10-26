@@ -46,6 +46,13 @@
             </div>
           </clr-dg-detail-body>
         </clr-dg-detail>
+        <clr-dg-footer>
+          <clr-dg-pagination #pagination [clrDgPageSize]="sizePage"
+              [clrDgTotalItems]="totalProjects">
+            <clr-dg-page-size>Proyectos por p&aacute;gina</clr-dg-page-size>
+            {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}} proyectos
+          </clr-dg-pagination>
+        </clr-dg-footer>
       </clr-datagrid>
     </div>
   </div>
